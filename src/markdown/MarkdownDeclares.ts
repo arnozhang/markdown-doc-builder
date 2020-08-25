@@ -275,8 +275,8 @@ export class MarkdownList extends MarkdownBaseNode {
         return this.list.toMarkdown();
     }
 
-    toHtml(): string {
-        return this.list.toHtml();
+    toHtml(styles?: HtmlStyles): string {
+        return this.list.toHtml(styles);
     }
 }
 
@@ -514,8 +514,8 @@ export class MarkdownTable extends MarkdownBaseNode {
         return `\n${this.table.toMarkdown()}\n`;
     }
 
-    toHtml(): string {
-        return `\n${this.table.toHtml()}\n`;
+    toHtml(styles?: HtmlStyles): string {
+        return `\n${this.table.toHtml(styles)}\n`;
     }
 }
 
@@ -545,10 +545,10 @@ export class MarkdownCompositeNodes extends MarkdownBaseNode {
         return content;
     }
 
-    toHtml(): string {
+    toHtml(styles?: HtmlStyles): string {
         let content = '';
         for (let node of this.nodes) {
-            content += node.toHtml();
+            content += node.toHtml(styles);
         }
 
         return content;

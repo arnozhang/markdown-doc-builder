@@ -31,7 +31,7 @@ const htmlContent = markdown
 
 ### 2.1. Headers
 
-Use the h1,h2,h3,h4,h5,h6 or header to generate a markdown header. Calling header with a level above 6 returns a h6 Header.
+Use the h1, h2, h3, h4, h5, h6 or header to generate a markdown header. Calling header with a level above 6 returns a h6 Header.
 
 ```typescript
 import markdown from 'markdown-doc-builder';
@@ -40,11 +40,11 @@ import markdown from 'markdown-doc-builder';
 markdown
     .newBuilder()
     .h1('Usage')
-    .h2('API')
-    .h3('Headers')
-    .h3('Emphasis')
-    .h3('Lists')
-    .h3('Table')
+    .h1('API')
+    .h2('Headers')
+    .h2('Emphasis')
+    .h2('Lists')
+    .h2('Table')
     .toMarkdown();
 ```
 

@@ -1,5 +1,6 @@
 import { JsUtils } from "js-utils-lite";
 import { MarkdownBaseNode, MarkdownContentBuilder } from "./MarkdownDeclares";
+import { HtmlStyles } from "..";
 
 /**
  * @author @author arnozhang <zyfgood12@163.com>
@@ -54,7 +55,7 @@ export class MarkdownListBuilder implements MarkdownContentBuilder {
         return `\n${content}\n`;
     }
 
-    toHtml(): string {
+    toHtml(styles?: HtmlStyles): string {
         const content = this.listInternal(
             '', this.items, 1, false,
             (nestPrefix: string, item: string) => {
