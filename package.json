@@ -1,0 +1,38 @@
+{
+    "name": "markdown-doc-builder",
+    "version": "1.1.0",
+    "description": "Markdown documents builder. Can output .md and .html files",
+    "main": "lib/index.js",
+    "scripts": {
+        "build": "tsc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/arnozhang/markdown-doc-builder.git"
+    },
+    "keywords": [
+        "Markdown",
+        "Documents",
+        "HTML"
+    ],
+    "files": [
+        "bin/",
+        "lib/",
+        "index.js"
+    ],
+    "types": "lib/index.d.ts",
+    "author": "arnozhang",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/arnozhang/markdown-doc-builder/issues"
+    },
+    "homepage": "https://github.com/arnozhang/markdown-doc-builder#readme",
+    "dependencies": {
+        "js-utils-lite": "^2.0.0"
+    },
+    "devDependencies": {
+        "@types/inquirer": "^7.3.1",
+        "@types/node": "^14.6.0",
+        "ts-node": "^9.0.0"
+    }
+}

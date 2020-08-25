@@ -1,0 +1,9 @@
+node_modules/
+dist/
+lib/
+build/
+bin/dist/
+bin/output
+bin/*.json
+
+test/output/

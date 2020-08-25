@@ -1,0 +1,12 @@
+node_modules/
+.vscode/
+dist/test/
+lib/test/
+
+test/
+src/
+
+.gitignore
+package-lock.json
+tsconfig.json
+*.tgz
