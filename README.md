@@ -6,7 +6,7 @@ Markdown documents builder. Can output .md and .html files
 
 > npm install --save markdown-doc-builder
 
-Using markdown-doc-builder is quite easy:
+Using [markdown-doc-builder](https://www.npmjs.com/package/markdown-doc-builder) is quite easy:
 
 ```typescript
 import markdown from 'markdown-doc-builder';
