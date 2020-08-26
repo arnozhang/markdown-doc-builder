@@ -12,19 +12,22 @@ export type MarkdownListItems = string[] | any[] | MarkdownBaseNode[];
 
 export class MarkdownListBuilder implements MarkdownContentBuilder {
 
-    static newBuilder(items?: MarkdownListItems): MarkdownListBuilder {
-        return new MarkdownListBuilder(items);
+    static newBuilder(items?: MarkdownListItems, ordered?: boolean): MarkdownListBuilder {
+        return new MarkdownListBuilder(items, ordered);
     }
 
 
     private readonly items: MarkdownListItems;
 
+    private listOrdered: boolean = false;
+
 
     /**
      * @private
      */
-    private constructor(items?: MarkdownListItems) {
+    private constructor(items?: MarkdownListItems, ordered?: boolean) {
         this.items = items || [];
+        this.listOrdered = ordered;
     }
 
     append(...items: string | any | MarkdownBaseNode | MarkdownListBuilder): MarkdownListBuilder {
@@ -38,72 +41,88 @@ export class MarkdownListBuilder implements MarkdownContentBuilder {
     }
 
     ordered(): MarkdownListBuilder {
+        this.listOrdered = true;
         return this;
     }
 
     unordered(): MarkdownListBuilder {
+        this.listOrdered = false;
         return this;
     }
 
     toMarkdown(): string {
-        const content = this.listInternal(
-            '', this.items, 0, true,
-            (nestPrefix: string, item: string) => {
-                return `${nestPrefix}- ${item}\n`;
-            });
-
+        const content = this.listInternal(this.items, 0, true);
         return `\n${content}\n`;
     }
 
     toHtml(styles?: HtmlStyles): string {
-        const content = this.listInternal(
-            '', this.items, 1, false,
-            (nestPrefix: string, item: string) => {
-                return `${nestPrefix}<li>${item}</li>\n`;
-            });
+        const content = this.listInternal(this.items, 0, false);
+        return this.htmlList(0, content);
+    }
 
-        return `\n<ul>\n${content}\n</ul>\n`;
+    private static dupString(char: string, times: number): string {
+        let result = '';
+        for (let i = 0; i < times; ++i) {
+            result += char;
+        }
+
+        return result;
+    }
+
+    private htmlList(nest: number, content: string) {
+        const olTypes = [ '1', 'a', 'i', ];
+        const prefix = MarkdownListBuilder.dupString('  ', nest);
+
+        return this.listOrdered
+            ? `\n${prefix}<ol type="${olTypes[nest % olTypes.length]}">\n${content}${prefix}</ol>\n`
+            : `\n${prefix}<ul>\n${content}${prefix}</ul>\n`;
     }
 
     private listInternal(
-        content: string,
-        items: MarkdownListItems,
-        nest: number,
-        toMarkdown: boolean,
-        formatter: (nestPrefix: string, item: string) => string) {
+        items: MarkdownListItems, nest: number, toMarkdown: boolean) {
 
-        const nestPrefix = (nest: number) => {
-            if (nest == null) {
-                nest = 0;
-            }
+        let content = '';
 
-            let prefix = '';
-            for (let i = 0; i < nest; ++i) {
-                prefix += '  ';
-            }
+        for (let i = 0; i < items.length; ++i) {
+            const item = items[i];
 
-            return prefix;
-        };
-
-        const rawItem = (item: any) => {
-            content += formatter(nestPrefix(nest), item);
-        };
-
-        for (let item of items) {
             if (JsUtils.isArray(item)) {
-                content = this.listInternal(
-                    content, item, nest + 1, toMarkdown, formatter);
+                content += this.listInternal(item, nest + 1, toMarkdown);
             } else if (item instanceof MarkdownBaseNode) {
-                rawItem(toMarkdown ? item.toMarkdown() : item.toHtml());
+                const itemContent = toMarkdown ? item.toMarkdown() : item.toHtml();
+                content += this.buildListItem(nest, i, itemContent, toMarkdown);
             } else if (item instanceof MarkdownListBuilder) {
                 const builder = item as MarkdownListBuilder;
-                content = this.listInternal(
-                    content, builder.items, nest + 1, toMarkdown, formatter);
+                const subListNest = nest + 1;
+                const subListContent = this.listInternal(
+                    builder.items, subListNest, toMarkdown);
+
+                content += toMarkdown
+                    ? subListContent
+                    : this.htmlList(subListNest, subListContent);
             } else {
-                rawItem(item);
+                content += this.buildListItem(nest, i, item, toMarkdown);
             }
         }
 
         return content;
     }
+
+    private buildListItem(
+        nest: number, index: number,
+        content: string, toMarkdown: boolean): string {
+
+        let prefix = toMarkdown
+            ? MarkdownListBuilder.dupString('\t', nest)
+            : MarkdownListBuilder.dupString('  ', nest + 1);
+
+        if (toMarkdown) {
+            return this.listOrdered
+                ? `${prefix}${index + 1}. ${content}\n`
+                : `${prefix}- ${content}\n`;
+        } else {
+            // HTML
+            return `${prefix}<li>${content}</li>\n`;
+        }
+    };
 }

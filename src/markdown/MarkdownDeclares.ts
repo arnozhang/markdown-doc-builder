@@ -186,7 +186,7 @@ export class MarkdownHeader extends MarkdownBaseContentNode {
 
         super(MarkdownNodeType.Header, content);
 
-        this.level = Math.min(level, 6);
+        this.level = Math.max(1, Math.min(level, HeaderIndicator.maxHeaderLevel));
         this.indicator = indicator;
     }
 
@@ -212,32 +212,7 @@ export class MarkdownHeader extends MarkdownBaseContentNode {
             return '';
         }
 
-        const level = this.level;
-        const headerIndex = this.indicator.headerIndex;
-
-        let markdownContent = '';
-
-        if (level > this.indicator.prevHeaderLevel) {
-            ++headerIndex[level];
-        } else if (level < this.indicator.prevHeaderLevel) {
-            for (let i = level; i < headerIndex.length; ++i) {
-                headerIndex[i] = 1;
-            }
-
-            ++headerIndex[level - 1];
-        } else {
-            ++headerIndex[level - 1];
-        }
-
-        this.indicator.prevHeaderLevel = level;
-
-        let index = '';
-
-        for (let i = 0; i < level; ++i) {
-            index += `${headerIndex[i]}.`;
-        }
-
-        return `${index} `;
+        return this.indicator.getHeaderIndex(this.level);
     }
 }
 
@@ -261,13 +236,16 @@ export class MarkdownList extends MarkdownBaseNode {
 
     list: MarkdownListBuilder;
 
-    constructor(items: MarkdownListItems | MarkdownListBuilder) {
+    constructor(
+        items: MarkdownListItems | MarkdownListBuilder,
+        ordered: boolean) {
+
         super(MarkdownNodeType.List);
 
         if (items instanceof MarkdownListBuilder) {
             this.list = items;
         } else {
-            this.list = MarkdownListBuilder.newBuilder(items);
+            this.list = MarkdownListBuilder.newBuilder(items, ordered);
         }
     }
 

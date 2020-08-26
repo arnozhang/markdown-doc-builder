@@ -72,6 +72,14 @@ export class MarkdownBuilder implements MarkdownContentBuilder {
             level, content, this.headerIndicator));
     }
 
+    resetHeaderIndicator(): MarkdownBuilder {
+        if (this.headerIndicator) {
+            this.headerIndicator.resetIndicator();
+        }
+
+        return this;
+    }
+
     bold(content: MarkdownContent): MarkdownBuilder {
         return this.appendNode(markdown.bold(content));
     }
@@ -128,8 +136,8 @@ export class MarkdownBuilder implements MarkdownContentBuilder {
         return this.appendNode(markdown.table(table));
     }
 
-    list(items: MarkdownListItems | MarkdownListBuilder): MarkdownBuilder {
-        return this.appendNode(markdown.list(items));
+    list(items: MarkdownListItems | MarkdownListBuilder, ordered?: boolean): MarkdownBuilder {
+        return this.appendNode(markdown.list(items, ordered));
     }
 
     compositeNodes(...nodes: MarkdownBaseNode[]): MarkdownBuilder {

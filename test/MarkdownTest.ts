@@ -12,12 +12,16 @@ const builder = markdown
 
 // headers
 builder
-    .h1('h1 Heading')
-    .h2('h2 Heading')
-    .h3('h3 Heading')
-    .h4('h4 Heading')
-    .h5('h5 Heading')
-    .h6('h6 Heading')
+    .h1('Usage')
+    .h1('API')
+    .h2('Headers')
+    .h2('Emphasis')
+    .h3('bold')
+    .h3('italic')
+    .h3('bold-italic')
+    .h2('Table')
+    .h2('List')
+    .h1('Output HTML')
     .newline();
 
 builder.separator();
@@ -58,7 +62,16 @@ builder.list([
     'Java', 'JavaScript', 'TypeScript',
     'Misc',
     markdown.newListBuilder().append('a', 'b', 'c'),
-]);
+]).linebreak();
+
+builder.list([ 'Java', 'JavaScript', 'TypeScript' ], true);
+builder.list([
+    'Java', 'JavaScript', 'TypeScript',
+    'Misc',
+    markdown.newListBuilder(null, true).append('a', 'b', 'c').append(
+        markdown.newListBuilder([ 'x', 'y', 'z' ], true),
+    ),
+], true);
 
 
 // table
@@ -108,4 +121,6 @@ const styles = markdown
     .defaultHtmlStyles()
     .globalCss("body {color: #000;}");
 
-fs.writeFileSync('./test/output/demo.html', builder.toHtml(styles));
+fs.writeFileSync(
+    './test/output/demo.html',
+    builder.resetHeaderIndicator().toHtml(styles));

@@ -88,8 +88,11 @@ export namespace markdown {
         return new MarkdownTable(table);
     }
 
-    export function list(items: MarkdownListItems | MarkdownListBuilder) {
-        return new MarkdownList(items);
+    export function list(
+        items: MarkdownListItems | MarkdownListBuilder,
+        ordered?: boolean) {
+
+        return new MarkdownList(items, ordered);
     }
 
     export function compositeNodes(...nodes: MarkdownBaseNode[]) {
@@ -108,8 +111,8 @@ export namespace markdown {
         return MarkdownTableBuilder.newBuilder(row, col);
     }
 
-    export function newListBuilder(items?: MarkdownListItems) {
-        return MarkdownListBuilder.newBuilder(items);
+    export function newListBuilder(items?: MarkdownListItems, ordered?: boolean) {
+        return MarkdownListBuilder.newBuilder(items, ordered);
     }
 
     export function newHtmlStyles() {
