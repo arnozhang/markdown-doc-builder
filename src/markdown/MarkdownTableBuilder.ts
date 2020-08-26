@@ -115,21 +115,37 @@ export class MarkdownTableBuilder implements MarkdownContentBuilder {
     toHtml(styles?: HtmlStyles): string {
         const appendRow = (tableRow: any[], isHeader: boolean) => {
             let content = '';
-            for (let item of tableRow) {
+
+            for (let i = 0; i < tableRow.length; ++i) {
+                let item = tableRow[i];
                 if (item == null) {
                     item = '';
                 } else if (item instanceof MarkdownBaseNode) {
                     item = item.toHtml();
                 }
 
+                let align = this.headersAlign ? this.headersAlign[i] : null;
+                let styleContent = 'text-align: inherit;';
+                if (align === TableAlignType.Middle) {
+                    styleContent = 'text-align: center;';
+                } else if (align === TableAlignType.Left) {
+                    styleContent = 'text-align: left;';
+                } else if (align === TableAlignType.Right) {
+                    styleContent = 'text-align: right;';
+                }
+
                 if (isHeader) {
-                    const thStyle = styles && JsUtils.isNotEmpty(styles.thStyleContent)
-                        ? ` style="${styles.thStyleContent}"` : '';
-                    content += `    <th${thStyle}><strong>${item}</strong></th>\n`;
+                    if (styles && JsUtils.isNotEmpty(styles.thStyleContent)) {
+                        styleContent = `${styles.thStyleContent} ${styleContent}`;
+                    }
+
+                    content += `    <th style="${styleContent}"><strong>${item}</strong></th>\n`;
                 } else {
-                    const tdStyle = styles && JsUtils.isNotEmpty(styles.tdStyleContent)
-                        ? ` style="${styles.tdStyleContent}"` : '';
-                    content += `    <td${tdStyle}>${item}</td>\n`;
+                    if (styles && JsUtils.isNotEmpty(styles.tdStyleContent)) {
+                        styleContent = `${styles.tdStyleContent} ${styleContent}`;
+                    }
+
+                    content += `    <td style="${styleContent}">${item}</td>\n`;
                 }
             }
 

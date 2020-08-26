@@ -117,9 +117,7 @@ if (!fs.existsSync('./test/output')) {
 fs.writeFileSync('./test/output/demo.md', builder.toMarkdown());
 
 
-const styles = markdown
-    .defaultHtmlStyles()
-    .globalCss("body {color: #000;}");
+const styles = markdown.defaultHtmlStyles();
 
 fs.writeFileSync(
     './test/output/demo.html',

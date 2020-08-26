@@ -29,7 +29,28 @@ export class HtmlStyles {
 
     useDefault(): HtmlStyles {
         // global CSS
-        this.globalCssContent = null;
+        this.globalCssContent = `
+blockquote {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 1em;
+    margin-left: 0px;
+    border-left: 3px solid #eee;
+    color: #8C8C8C;
+}
+
+code {
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+    font-size: inherit;
+    background-color: rgba(0, 0, 0, 0.06);
+    padding: 0 2px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 2px 2px;
+    line-height: inherit;
+    word-wrap: break-word;
+    text-indent: 0;
+}
+`;
 
         // table
         this.tableStyleContent = 'border: 1px solid #000;';
